@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Подарок для Дашули</title>
     <style>
         :root {
@@ -11,36 +11,32 @@
             --text-pink: #ff4d6d;
         }
 
-        html {
+        html, body {
             margin: 0;
             padding: 0;
-            min-height: 100%;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            min-height: 100%;
+            width: 100%;
+            height: 100%;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-pink);
-            overflow-x: hidden;
-            overflow-y: hidden; /* Скролл закрыт на время опроса */
+            overflow: hidden; /* Скролл запрещен всегда на всех экранах, кроме финального */
         }
 
         .screen {
             width: 100%;
-            min-height: 100vh;
+            height: 100vh;
             display: none; /* Все скрыты по умолчанию */
             justify-content: center;
             align-items: center;
             flex-direction: column;
             padding: 20px;
             box-sizing: border-box;
+            position: absolute; /* Для наложения экранов */
+            top: 0; left: 0;
             animation: fadeIn 0.5s ease-out;
         }
 
         /* Показываем первый вопрос при загрузке */
-        #screen-q1 { display: flex; }
+        #screen-q1 { display: flex; z-index: 10; }
 
         /* --- КАРТОЧКИ --- */
         .card {
@@ -51,34 +47,17 @@
             text-align: center;
             max-width: 500px;
             width: 100%;
-            position: relative;
-            z-index: 10;
+            z-index: 20;
         }
 
-        /* Специальный класс для финальной карточки, чтобы текст поместился красиво */
         .final-card {
             max-width: 650px;
             padding: 50px 40px;
         }
 
-        h2 {
-            color: var(--text-pink);
-            margin-bottom: 20px;
-            font-size: 26px;
-        }
-
-        h1 {
-            color: var(--main-pink);
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
-
-        p {
-            color: #555;
-            font-size: 20px;
-            margin-bottom: 30px;
-            line-height: 1.5;
-        }
+        h2 { color: var(--text-pink); margin-bottom: 20px; font-size: 26px; }
+        h1 { color: var(--main-pink); font-size: 32px; margin-bottom: 10px; }
+        p { color: #555; font-size: 20px; margin-bottom: 30px; line-height: 1.5; }
 
         /* --- КНОПКИ --- */
         .button-group {
@@ -125,48 +104,62 @@
             animation: pulse 2s infinite;
         }
 
-        /* --- ГАЛЕРЕЯ (ЭКРАН 3) --- */
+        /* --- ГАЛЕРЕЯ "РАЗБРОСАННЫЕ ФОТО" (ЭКРАН 3) --- */
         #screen-3 {
-            align-items: center;
-            padding-top: 50px;
-            padding-bottom: 50px;
+            padding: 0;
+            background-color: #e0e0e0; /* Немного темнее, как пол */
+            position: relative;
+            overflow: hidden; /* Фотки не должны улетать за край */
         }
 
-        .gallery-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .polaroid {
+        .scatter-photo {
             background: white;
-            padding: 10px 10px 25px 10px;
-            border-radius: 5px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-            width: 250px;
-            opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            padding: 8px 8px 20px 8px; /* Стиль полароид */
+            border-radius: 4px;
+            box-shadow: 2px 4px 10px rgba(0,0,0,0.3);
+            width: 180px; /* Сделал поменьше, чтобы набросать много */
+            position: absolute; /* Ключевое для таскания */
+            cursor: grab; /* Курсор "рука" */
+            user-select: none; /* Запрет выделения текста */
+            touch-action: none; /* Запрет стандартных жестов телефона */
+            transition: transform 0.1s ease, box-shadow 0.1s ease; /* Плавность */
         }
 
-        .polaroid.visible { opacity: 1; }
+        /* Стиль при таскании */
+        .scatter-photo.dragging {
+            cursor: grabbing;
+            box-shadow: 5px 10px 20px rgba(0,0,0,0.4);
+            transform: scale(1.05) rotate(0deg) !important; /* Чуть увеличиваем и выпрямляем */
+            z-index: 10000 !important; /* Всегда сверху других */
+        }
 
-        .polaroid img {
+        .scatter-photo img {
             width: 100%;
-            height: 250px;
+            height: 180px;
             object-fit: cover;
-            border-radius: 3px;
+            border-radius: 2px;
+            pointer-events: none; /* Картинка не мешает клику по рамке */
         }
 
-        .gallery-title {
-            width: 100%;
-            text-align: center;
-            color: var(--main-pink);
-            font-size: 32px;
-            margin-bottom: 40px;
+        .gallery-ui {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20000; /* Поверх всех фото */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .gallery-title-mini {
+            color: #333;
+            background: rgba(255,255,255,0.7);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 18px;
+            margin: 0;
         }
 
         @keyframes fadeIn {
@@ -191,7 +184,6 @@
         </div>
     </div>
 </div>
-
 <div id="screen-q2" class="screen">
     <div class="card">
         <h2>Тебя зовут Дашуля? 🥰</h2>
@@ -201,7 +193,6 @@
         </div>
     </div>
 </div>
-
 <div id="screen-q3" class="screen">
     <div class="card">
         <h2>Твоего парня зовут Лёша? 😎</h2>
@@ -211,7 +202,6 @@
         </div>
     </div>
 </div>
-
 <div id="screen-error" class="screen">
     <div class="card">
         <h2 style="color: #555;">Ой... 🛑</h2>
@@ -227,100 +217,164 @@
         <h1>С Днем Рождения, Дашуля! 🎂</h1>
         <p>Пусть каждый твой день будет таким же прекрасным, как ты.</p>
         <h2>Хочешь вспомнить, как это было?</h2>
-        <button class="want-btn" onclick="startGallery()">ХОЧУ!</button>
+        <button class="want-btn" onclick="startScatterGallery()">ХОЧУ!</button>
     </div>
 </div>
 
 <div id="screen-3" class="screen">
-    <h1 class="gallery-title">Наши лучшие моменты 📸</h1>
-    <div class="gallery-container" id="gallery"></div>
-
-    <div style="margin-top: 60px; padding-bottom: 40px;">
-        <button class="want-btn" onclick="goToFinal()">ДАЛЕЕ</button>
+    <div class="gallery-ui">
+        <p class="gallery-title-mini">Наши моменты (попробуй перетащить их!) 📸</p>
+        <button class="want-btn" style="font-size: 18px; padding: 10px 30px;" onclick="goToFinal()">ДАЛЕЕ</button>
     </div>
 </div>
 
 <div id="screen-4" class="screen">
     <div class="card final-card">
         <h1 style="font-size: 34px; margin-bottom: 25px;">А далее... ❤️</h1>
-
         <p style="font-size: 20px; line-height: 1.6; color: #444; text-align: left;">
-            Моя Дашенька, ты - самое прекрасное чудо в моей жизни. Эти фотографии - лишь крошечная часть нашей истории, и я обещаю, что впереди нас ждет целая вечность таких же ярких, теплых и счастливых дней.
+            Дашуля, ты — самое прекрасное чудо в моей жизни. Эти фотографии — лишь крошечная часть нашей истории, и я обещаю, что впереди нас ждет целая вечность таких же ярких, теплых и счастливых дней.
             <br><br>
             Спасибо тебе за твою улыбку, которая согревает меня каждый день. Спасибо за твою нежность, поддержку и за то, что рядом с тобой я чувствую себя самым счастливым на свете. Пусть все твои мечты сбываются, а я всегда буду рядом, чтобы держать тебя за руку.
         </p>
-
         <h2 style="color: var(--main-pink); font-size: 28px; margin-top: 40px;">
-            С Днем Рождения, моя единственная и неповторимая! Я безумно тебя люблю! 🥰
+            С Днем Рождения, моя единственная и неповторимая! Я безу безумно тебя люблю! 🥰
         </h2>
     </div>
 </div>
 
 <script>
+    // --- Базовая логика ---
     function goTo(screenId) {
         document.querySelectorAll('.screen').forEach(el => el.style.display = 'none');
-        document.getElementById(screenId).style.display = 'flex';
+        const target = document.getElementById(screenId);
+        target.style.display = 'flex';
+        target.style.zIndex = '100'; // Всегда поверх
     }
 
     function showError(step) {
         const msgElement = document.getElementById('error-message');
-
-        if (step === 1) {
-            msgElement.innerText = "Эта страница доступна только для самой прекрасной девушки в мире! 💔";
-        } else if (step === 2) {
-            msgElement.innerText = "Ошибка! Самую прекрасную девушку в мире зовут Дашуля! 💔";
-        } else if (step === 3) {
-            msgElement.innerText = "Взлом не удался! У самой прекрасной в мире девушки с именем Дашуля может быть только парень с именем Лёша! 💔";
-        }
-
+        if (step === 1) msgElement.innerText = "Эта страница доступна только для самой прекрасной девушки в мире! 💔";
+        else if (step === 2) msgElement.innerText = "Ошибка! Самую прекрасную девушку в мире зовут Дашуля! 💔";
+        else if (step === 3) msgElement.innerText = "Взлом не удался! У самой прекрасной в мире девушки с именем Дашуля может быть только парень с именем Лёша! 💔";
         goTo('screen-error');
     }
 
-    function startGallery() {
+    // --- ЛОГИКА ГАЛЕРЕИ ДРАГ-ЭНД-ДРОП ---
+
+    // Глобальные переменные для перетаскивания
+    let currentDraggingPhoto = null;
+    let dragOffsetX = 0;
+    let dragOffsetY = 0;
+    let highestZIndex = 100; // Счетчик слоев
+
+    function startScatterGallery() {
         goTo('screen-3');
-        document.documentElement.style.overflowY = 'auto';
-        document.body.style.overflowY = 'auto';
-        createGallery();
+        createScatterGallery();
+        setupDragAndDrop();
     }
 
-    function goToFinal() {
-        goTo('screen-4');
-        window.scrollTo(0, 0);
-        document.documentElement.style.overflowY = 'hidden';
-        document.body.style.overflowY = 'hidden';
-    }
-
-    function createGallery() {
-        const gallery = document.getElementById('gallery');
+    function createScatterGallery() {
+        const screen = document.getElementById('screen-3');
         const totalPhotos = 38;
 
-        if (gallery.innerHTML !== '') return;
+        // Очищаем, если зашли повторно
+        const existingPhotos = screen.querySelectorAll('.scatter-photo');
+        if (existingPhotos.length > 0) return;
 
         for (let i = 1; i <= totalPhotos; i++) {
-            const polaroid = document.createElement('div');
-            polaroid.className = 'polaroid';
+            const photoDiv = document.createElement('div');
+            photoDiv.className = 'scatter-photo';
 
-            const randomRotation = (Math.random() * 10) - 5;
-            polaroid.style.setProperty('--rot', `${randomRotation}deg`);
+            // 1. Случайное положение (с отступом от краев)
+            const padding = 50;
+            const randomX = Math.random() * (window.innerWidth - 180 - padding * 2) + padding;
+            const randomY = Math.random() * (window.innerHeight - 200 - padding * 2) + padding;
+            photoDiv.style.left = `${randomX}px`;
+            photoDiv.style.top = `${randomY}px`;
 
-            polaroid.innerHTML = `<img src="photo${i}.jpg" alt="Момент ${i}">`;
-            gallery.appendChild(polaroid);
+            // 2. Случайный наклон
+            const randomRotation = (Math.random() * 30) - 15; // от -15 до 15 градусов
+            photoDiv.style.transform = `rotate(${randomRotation}deg)`;
+
+            // 3. Уникальный слой
+            highestZIndex++;
+            photoDiv.style.zIndex = highestZIndex;
+
+            photoDiv.innerHTML = `<img src="photo${i}.jpg" alt="Момент ${i}" draggable="false">`;
+            screen.appendChild(photoDiv);
         }
+    }
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    const rot = entry.target.style.getPropertyValue('--rot');
-                    entry.target.style.transform = `translateY(0) rotate(${rot})`;
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
+    function setupDragAndDrop() {
+        const screen = document.getElementById('screen-3');
 
-        document.querySelectorAll('.polaroid').forEach(pol => {
-            observer.observe(pol);
-        });
+        // Обработка клика/касания (начало таскания)
+        screen.addEventListener('mousedown', startDrag);
+        screen.addEventListener('touchstart', startDrag, { passive: false });
+
+        // Обработка движения (само таскание)
+        window.addEventListener('mousemove', drag);
+        window.addEventListener('touchmove', drag, { passive: false });
+
+        // Обработка отпускания (конец таскания)
+        window.addEventListener('mouseup', endDrag);
+        window.addEventListener('touchend', endDrag);
+    }
+
+    function startDrag(e) {
+        // Проверяем, кликнули ли мы именно по фотке (или по её рамке)
+        const photo = e.target.closest('.scatter-photo');
+        if (!photo) return;
+
+        currentDraggingPhoto = photo;
+        photo.classList.add('dragging');
+
+        // Всплытие поверх всех
+        highestZIndex++;
+        photo.style.zIndex = highestZIndex;
+
+        // Координаты клика
+        const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+        const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+
+        // Вычисляем отступ от курсора до левого верхнего угла фотки
+        const rect = photo.getBoundingClientRect();
+        dragOffsetX = clientX - rect.left;
+        dragOffsetY = clientY - rect.top;
+
+        // Запрещаем стандартный скролл на мобилке при таскании
+        if (e.type === 'touchstart') e.preventDefault();
+    }
+
+    function drag(e) {
+        if (!currentDraggingPhoto) return;
+
+        // Координаты курсора
+        const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+        const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+
+        // Новые координаты фотки (курсор минус начальный отступ)
+        const newX = clientX - dragOffsetX;
+        const newY = clientY - dragOffsetY;
+
+        currentDraggingPhoto.style.left = `${newX}px`;
+        currentDraggingPhoto.style.top = `${newY}px`;
+
+        if (e.type === 'touchmove') e.preventDefault();
+    }
+
+    function endDrag() {
+        if (currentDraggingPhoto) {
+            currentDraggingPhoto.classList.remove('dragging');
+            currentDraggingPhoto = null;
+        }
+    }
+
+    // --- Финал ---
+    function goToFinal() {
+        // На всякий случай сбрасываем состояние таскания
+        endDrag();
+        goTo('screen-4');
     }
 </script>
 </body>
