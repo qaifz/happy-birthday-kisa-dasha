@@ -18,27 +18,25 @@
             height: 100%;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-pink);
-            overflow: hidden; /* Скролл запрещен всегда на всех экранах, кроме финального */
+            overflow: hidden;
         }
 
         .screen {
             width: 100%;
             height: 100vh;
-            display: none; /* Все скрыты по умолчанию */
+            display: none;
             justify-content: center;
             align-items: center;
             flex-direction: column;
             padding: 20px;
             box-sizing: border-box;
-            position: absolute; /* Для наложения экранов */
+            position: absolute;
             top: 0; left: 0;
             animation: fadeIn 0.5s ease-out;
         }
 
-        /* Показываем первый вопрос при загрузке */
         #screen-q1 { display: flex; z-index: 10; }
 
-        /* --- КАРТОЧКИ --- */
         .card {
             background: white;
             padding: 40px;
@@ -59,7 +57,6 @@
         h1 { color: var(--main-pink); font-size: 32px; margin-bottom: 10px; }
         p { color: #555; font-size: 20px; margin-bottom: 30px; line-height: 1.5; }
 
-        /* --- КНОПКИ --- */
         .button-group {
             display: flex;
             justify-content: center;
@@ -90,7 +87,6 @@
             color: #495057;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
-        .no-btn:hover { transform: scale(1.05); }
 
         .want-btn {
             background: linear-gradient(45deg, #ff4d6d, #ff758f);
@@ -104,33 +100,31 @@
             animation: pulse 2s infinite;
         }
 
-        /* --- ГАЛЕРЕЯ "РАЗБРОСАННЫЕ ФОТО" (ЭКРАН 3) --- */
         #screen-3 {
             padding: 0;
-            background-color: #e0e0e0; /* Немного темнее, как пол */
+            background-color: #e0e0e0;
             position: relative;
-            overflow: hidden; /* Фотки не должны улетать за край */
+            overflow: hidden;
         }
 
         .scatter-photo {
             background: white;
-            padding: 8px 8px 20px 8px; /* Стиль полароид */
+            padding: 8px 8px 20px 8px;
             border-radius: 4px;
             box-shadow: 2px 4px 10px rgba(0,0,0,0.3);
-            width: 180px; /* Сделал поменьше, чтобы набросать много */
-            position: absolute; /* Ключевое для таскания */
-            cursor: grab; /* Курсор "рука" */
-            user-select: none; /* Запрет выделения текста */
-            touch-action: none; /* Запрет стандартных жестов телефона */
-            transition: transform 0.1s ease, box-shadow 0.1s ease; /* Плавность */
+            width: 180px;
+            position: absolute;
+            cursor: grab;
+            user-select: none;
+            touch-action: none;
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
         }
 
-        /* Стиль при таскании */
         .scatter-photo.dragging {
             cursor: grabbing;
             box-shadow: 5px 10px 20px rgba(0,0,0,0.4);
-            transform: scale(1.05) rotate(0deg) !important; /* Чуть увеличиваем и выпрямляем */
-            z-index: 10000 !important; /* Всегда сверху других */
+            transform: scale(1.05) rotate(0deg) !important;
+            z-index: 10000 !important;
         }
 
         .scatter-photo img {
@@ -138,7 +132,7 @@
             height: 180px;
             object-fit: cover;
             border-radius: 2px;
-            pointer-events: none; /* Картинка не мешает клику по рамке */
+            pointer-events: none;
         }
 
         .gallery-ui {
@@ -146,7 +140,7 @@
             bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
-            z-index: 20000; /* Поверх всех фото */
+            z-index: 20000;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -171,6 +165,50 @@
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
+
+        /* ТОРТ */
+        .cake-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+        }
+        .cake-tier {
+            background: #f497ad;
+            border-radius: 10px 10px 4px 4px;
+            border: 2px solid #ff4d6d;
+        }
+        .cake-bottom { width: 150px; height: 60px; }
+        .cake-top { width: 100px; height: 50px; margin-bottom: -2px; }
+        .candle {
+            width: 10px;
+            height: 40px;
+            background: #fff;
+            border: 2px solid #ff4d6d;
+            position: relative;
+            margin-bottom: -2px;
+        }
+        .flame {
+            width: 15px;
+            height: 25px;
+            background: orange;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            position: absolute;
+            top: -30px;
+            left: -4px;
+            box-shadow: 0 0 15px rgba(255, 165, 0, 0.7);
+            animation: flicker 0.6s infinite alternate;
+        }
+        @keyframes flicker {
+            from { transform: scale(1); opacity: 0.9; }
+            to { transform: scale(1.1); opacity: 1; }
+        }
+        .flame.off { display: none; }
     </style>
 </head>
 <body>
@@ -184,6 +222,7 @@
         </div>
     </div>
 </div>
+
 <div id="screen-q2" class="screen">
     <div class="card">
         <h2>Тебя зовут Дашуля? 🥰</h2>
@@ -193,6 +232,7 @@
         </div>
     </div>
 </div>
+
 <div id="screen-q3" class="screen">
     <div class="card">
         <h2>Твоего парня зовут Лёша? 😎</h2>
@@ -202,6 +242,7 @@
         </div>
     </div>
 </div>
+
 <div id="screen-error" class="screen">
     <div class="card">
         <h2 style="color: #555;">Ой... 🛑</h2>
@@ -223,49 +264,65 @@
 
 <div id="screen-3" class="screen">
     <div class="gallery-ui">
-        <p class="gallery-title-mini">Наши некоторые моменты 📸</p>
+        <p class="gallery-title-mini">Наши моменты (попробуй перетащить!) 📸</p>
         <button class="want-btn" style="font-size: 18px; padding: 10px 30px;" onclick="goToFinal()">ДАЛЕЕ</button>
     </div>
 </div>
 
 <div id="screen-4" class="screen">
-    <div class="card final-card">
-        <h1 style="font-size: 34px; margin-bottom: 25px;">А далее... ❤️</h1>
-        <p style="font-size: 20px; line-height: 1.6; color: #444; text-align: left;">
-            Моя Дашенька, ты - самое прекрасное чудо в моей жизни. Эти фотографии - лишь крошечная часть нашей истории, и я обещаю, что впереди нас ждет целая вечность таких же ярких, теплых и счастливых дней.
-            <br><br>
-            Спасибо тебе за твою улыбку, которая согревает меня каждый день. Спасибо за твою нежность, поддержку и за то, что рядом с тобой я чувствую себя самым счастливым на свете. Пусть все твои мечты сбываются, а я всегда буду рядом, чтобы держать тебя за руку.
+    <div style="position: relative; width: 100%; max-width: 650px; display: flex; flex-direction: column; align-items: center;">
+        <div class="card final-card" id="final-text-content">
+            <h1 style="font-size: 34px; margin-bottom: 25px;">А далее... ❤️</h1>
+            <p style="font-size: 20px; line-height: 1.6; color: #444; text-align: left;">
+                Дашуля, ты — самое прекрасное чудо в моей жизни. Эти фотографии — лишь крошечная часть нашей истории...
+                <br><br>
+                Спасибо тебе за твою улыбку и за то, что рядом с тобой я чувствую себя самым счастливым на свете.
+            </p>
+            <h2 style="color: var(--main-pink); font-size: 28px; margin-top: 40px;">
+                С Днем Рождения! Я тебя люблю! 🥰
+            </h2>
+        </div>
+        <canvas id="scratch-canvas" style="position: absolute; top: 0; left: 0; border-radius: 30px; cursor: crosshair; z-index: 30;"></canvas>
+        <!-- Кнопка теперь снаружи относительного контейнера карточки, чтобы всегда быть кликабельной -->
+        <button class="btn yes-btn" id="to-cake-btn" style="display:none; margin-top: 30px; z-index: 40;" onclick="goTo('screen-5')">Загадать желание 🎂</button>
+    </div>
+</div>
+
+<div id="screen-5" class="screen">
+    <div class="card">
+        <h2 id="cake-instruction">Загадай самое заветное желание... и задуй свечку (жми на неё) ✨</h2>
+        <div class="cake-container" onclick="blowOut()">
+            <div class="candle">
+                <div class="flame" id="flame"></div>
+            </div>
+            <div class="cake-tier cake-top"></div>
+            <div class="cake-tier cake-bottom"></div>
+        </div>
+        <p id="wish-message" style="display: none; margin-top: 20px; font-weight: bold; color: var(--main-pink); animation: fadeIn 1.5s;">
+            Твоё желание обязательно сбудется! <br> Я для этого сделаю всё возможное. ❤️
         </p>
-        <h2 style="color: var(--main-pink); font-size: 28px; margin-top: 40px;">
-            С Днем Рождения, моя единственная и неповторимая! Я безумно тебя люблю! 🥰
-        </h2>
     </div>
 </div>
 
 <script>
-    // --- Базовая логика ---
+    let highestZIndex = 100;
+    let currentDraggingPhoto = null;
+    let dragOffsetX = 0, dragOffsetY = 0;
+
     function goTo(screenId) {
         document.querySelectorAll('.screen').forEach(el => el.style.display = 'none');
         const target = document.getElementById(screenId);
         target.style.display = 'flex';
-        target.style.zIndex = '100'; // Всегда поверх
+        target.style.zIndex = '100';
     }
 
     function showError(step) {
         const msgElement = document.getElementById('error-message');
         if (step === 1) msgElement.innerText = "Эта страница доступна только для самой прекрасной девушки в мире! 💔";
         else if (step === 2) msgElement.innerText = "Ошибка! Самую прекрасную девушку в мире зовут Дашуля! 💔";
-        else if (step === 3) msgElement.innerText = "Взлом не удался! У самой прекрасной в мире девушки с именем Дашуля может быть только парень с именем Лёша! 💔";
+        else if (step === 3) msgElement.innerText = "Взлом не удался! У Дашули может быть только парень Лёша! 💔";
         goTo('screen-error');
     }
-
-    // --- ЛОГИКА ГАЛЕРЕИ ДРАГ-ЭНД-ДРОП ---
-
-    // Глобальные переменные для перетаскивания
-    let currentDraggingPhoto = null;
-    let dragOffsetX = 0;
-    let dragOffsetY = 0;
-    let highestZIndex = 100; // Счетчик слоев
 
     function startScatterGallery() {
         goTo('screen-3');
@@ -275,107 +332,139 @@
 
     function createScatterGallery() {
         const screen = document.getElementById('screen-3');
-        const totalPhotos = 38;
+        if (screen.querySelectorAll('.scatter-photo').length > 0) return;
 
-        // Очищаем, если зашли повторно
-        const existingPhotos = screen.querySelectorAll('.scatter-photo');
-        if (existingPhotos.length > 0) return;
-
-        for (let i = 1; i <= totalPhotos; i++) {
+        for (let i = 1; i <= 38; i++) {
             const photoDiv = document.createElement('div');
             photoDiv.className = 'scatter-photo';
-
-            // 1. Случайное положение (с отступом от краев)
             const padding = 50;
-            const randomX = Math.random() * (window.innerWidth - 180 - padding * 2) + padding;
-            const randomY = Math.random() * (window.innerHeight - 200 - padding * 2) + padding;
-            photoDiv.style.left = `${randomX}px`;
-            photoDiv.style.top = `${randomY}px`;
-
-            // 2. Случайный наклон
-            const randomRotation = (Math.random() * 30) - 15; // от -15 до 15 градусов
-            photoDiv.style.transform = `rotate(${randomRotation}deg)`;
-
-            // 3. Уникальный слой
-            highestZIndex++;
-            photoDiv.style.zIndex = highestZIndex;
-
-            photoDiv.innerHTML = `<img src="photo${i}.jpg" alt="Момент ${i}" draggable="false">`;
+            photoDiv.style.left = `${Math.random() * (window.innerWidth - 200)}px`;
+            photoDiv.style.top = `${Math.random() * (window.innerHeight - 250)}px`;
+            photoDiv.style.transform = `rotate(${(Math.random() * 30) - 15}deg)`;
+            photoDiv.style.zIndex = ++highestZIndex;
+            photoDiv.innerHTML = `<img src="photo${i}.jpg" alt="Фото" draggable="false">`;
             screen.appendChild(photoDiv);
         }
     }
 
     function setupDragAndDrop() {
         const screen = document.getElementById('screen-3');
-
-        // Обработка клика/касания (начало таскания)
-        screen.addEventListener('mousedown', startDrag);
-        screen.addEventListener('touchstart', startDrag, { passive: false });
-
-        // Обработка движения (само таскание)
-        window.addEventListener('mousemove', drag);
-        window.addEventListener('touchmove', drag, { passive: false });
-
-        // Обработка отпускания (конец таскания)
-        window.addEventListener('mouseup', endDrag);
-        window.addEventListener('touchend', endDrag);
-    }
-
-    function startDrag(e) {
-        // Проверяем, кликнули ли мы именно по фотке (или по её рамке)
-        const photo = e.target.closest('.scatter-photo');
-        if (!photo) return;
-
-        currentDraggingPhoto = photo;
-        photo.classList.add('dragging');
-
-        // Всплытие поверх всех
-        highestZIndex++;
-        photo.style.zIndex = highestZIndex;
-
-        // Координаты клика
-        const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-        const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
-
-        // Вычисляем отступ от курсора до левого верхнего угла фотки
-        const rect = photo.getBoundingClientRect();
-        dragOffsetX = clientX - rect.left;
-        dragOffsetY = clientY - rect.top;
-
-        // Запрещаем стандартный скролл на мобилке при таскании
-        if (e.type === 'touchstart') e.preventDefault();
-    }
-
-    function drag(e) {
-        if (!currentDraggingPhoto) return;
-
-        // Координаты курсора
-        const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-        const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
-
-        // Новые координаты фотки (курсор минус начальный отступ)
-        const newX = clientX - dragOffsetX;
-        const newY = clientY - dragOffsetY;
-
-        currentDraggingPhoto.style.left = `${newX}px`;
-        currentDraggingPhoto.style.top = `${newY}px`;
-
-        if (e.type === 'touchmove') e.preventDefault();
-    }
-
-    function endDrag() {
-        if (currentDraggingPhoto) {
-            currentDraggingPhoto.classList.remove('dragging');
+        const start = (e) => {
+            const photo = e.target.closest('.scatter-photo');
+            if (!photo) return;
+            currentDraggingPhoto = photo;
+            photo.classList.add('dragging');
+            photo.style.zIndex = ++highestZIndex;
+            const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+            const rect = photo.getBoundingClientRect();
+            dragOffsetX = clientX - rect.left;
+            dragOffsetY = clientY - rect.top;
+        };
+        const move = (e) => {
+            if (!currentDraggingPhoto) return;
+            const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+            currentDraggingPhoto.style.left = `${clientX - dragOffsetX}px`;
+            currentDraggingPhoto.style.top = `${clientY - dragOffsetY}px`;
+            if (e.type === 'touchmove') e.preventDefault();
+        };
+        const end = () => {
+            if (currentDraggingPhoto) currentDraggingPhoto.classList.remove('dragging');
             currentDraggingPhoto = null;
+        };
+
+        screen.addEventListener('mousedown', start);
+        screen.addEventListener('touchstart', start, {passive: false});
+        window.addEventListener('mousemove', move);
+        window.addEventListener('touchmove', move, {passive: false});
+        window.addEventListener('mouseup', end);
+        window.addEventListener('touchend', end);
+    }
+
+    function createHeart(x, y) {
+        const heart = document.createElement('div');
+        heart.innerHTML = '❤️';
+        heart.style.cssText = `position:fixed; left:${x-10}px; top:${y-10}px; font-size:${Math.random()*15+15}px; pointer-events:none; z-index:2000; transition:all 1.5s ease-out;`;
+        document.body.appendChild(heart);
+        setTimeout(() => {
+            heart.style.transform = `translate(${(Math.random()-0.5)*100}px, -200px)`;
+            heart.style.opacity = '0';
+        }, 50);
+        setTimeout(() => heart.remove(), 1500);
+    }
+
+    function initScratchCard() {
+        const canvas = document.getElementById('scratch-canvas');
+        const ctx = canvas.getContext('2d');
+        const container = document.getElementById('final-text-content');
+        const rect = container.getBoundingClientRect();
+
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+        ctx.fillStyle = '#ff758f';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "white";
+        ctx.font = "bold 22px Segoe UI";
+        ctx.textAlign = "center";
+        ctx.fillText("Стри здесь, чтобы прочитать...", canvas.width/2, canvas.height/2);
+
+        let isDrawing = false;
+
+        const checkScratch = () => {
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+            let cleared = 0;
+            for (let i = 3; i < imageData.length; i += 40) { // Проверяем каждый 10-й пиксель для скорости
+                if (imageData[i] === 0) cleared++;
+            }
+            if (cleared > (imageData.length / 40) * 0.4) {
+                document.getElementById('to-cake-btn').style.display = 'block';
+            }
+        };
+
+        const scratch = (e) => {
+            if (!isDrawing) return;
+            const r = canvas.getBoundingClientRect();
+            const x = (e.type.includes('touch') ? e.touches[0].clientX : e.clientX) - r.left;
+            const y = (e.type.includes('touch') ? e.touches[0].clientY : e.clientY) - r.top;
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.beginPath();
+            ctx.arc(x, y, 35, 0, Math.PI * 2);
+            ctx.fill();
+            checkScratch();
+        };
+
+        canvas.addEventListener('mousedown', () => isDrawing = true);
+        canvas.addEventListener('touchstart', (e) => { isDrawing = true; e.preventDefault(); });
+        window.addEventListener('mouseup', () => isDrawing = false);
+        window.addEventListener('touchend', () => isDrawing = false);
+        canvas.addEventListener('mousemove', scratch);
+        canvas.addEventListener('touchmove', scratch);
+    }
+
+    function goToFinal() {
+        goTo('screen-4');
+        setTimeout(initScratchCard, 100);
+    }
+
+    function blowOut() {
+        const flame = document.getElementById('flame');
+        if (!flame.classList.contains('off')) {
+            flame.classList.add('off');
+            document.getElementById('cake-instruction').innerText = "Желание принято! ✨";
+            document.getElementById('wish-message').style.display = "block";
+            for(let i=0; i<15; i++) {
+                setTimeout(() => {
+                    const rect = document.querySelector('.cake-container').getBoundingClientRect();
+                    createHeart(rect.left + rect.width/2, rect.top);
+                }, i * 100);
+            }
         }
     }
 
-    // --- Финал ---
-    function goToFinal() {
-        // На всякий случай сбрасываем состояние таскания
-        endDrag();
-        goTo('screen-4');
-    }
+    document.getElementById('screen-4').addEventListener('click', (e) => {
+        if (e.target.id !== 'scratch-canvas') createHeart(e.clientX, e.clientY);
+    });
 </script>
 </body>
 </html>
