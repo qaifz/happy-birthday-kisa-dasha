@@ -18,7 +18,7 @@
             height: 100%;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-pink);
-            overflow: hidden;
+            overflow: hidden; /* Запрещаем общий скролл сайта */
         }
 
         .screen {
@@ -28,45 +28,64 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            padding: 20px;
+            padding: 15px; /* Уменьшили отступ для мобилок */
             box-sizing: border-box;
             position: absolute;
             top: 0; left: 0;
             animation: fadeIn 0.5s ease-out;
+            overflow-y: auto; /* РАЗРЕШАЕМ СКРОЛЛ ВНУТРИ ЭКРАНА, ЕСЛИ НЕ ВЛЕЗАЕТ */
         }
 
         #screen-q1 { display: flex; z-index: 10; }
 
         .card {
             background: white;
-            padding: 40px;
-            border-radius: 30px;
-            box-shadow: 0 15px 35px rgba(255, 77, 109, 0.2);
+            padding: 30px 20px; /* Уменьшили внутренние отступы */
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(255, 77, 109, 0.15);
             text-align: center;
             max-width: 500px;
             width: 100%;
             z-index: 20;
+            box-sizing: border-box;
         }
 
         .final-card {
-            max-width: 650px;
-            padding: 50px 40px;
+            max-width: 600px;
+            padding: 30px 20px;
         }
 
-        h2 { color: var(--text-pink); margin-bottom: 20px; font-size: 26px; }
-        h1 { color: var(--main-pink); font-size: 32px; margin-bottom: 10px; }
-        p { color: #555; font-size: 20px; margin-bottom: 30px; line-height: 1.5; }
+        h1 { color: var(--main-pink); font-size: 26px; margin-bottom: 10px; } /* Чуть меньше */
+        h2 { color: var(--text-pink); margin-bottom: 15px; font-size: 22px; }
+        p { color: #555; font-size: 17px; margin-bottom: 20px; line-height: 1.4; }
 
+        /* АДАПТИВНОСТЬ ДЛЯ МОБИЛОК (iPhone) */
+        @media (max-width: 480px) {
+            h1 { font-size: 22px; }
+            h2 { font-size: 18px; }
+            p { font-size: 15px; }
+            .btn { padding: 10px 25px; font-size: 16px; }
+            .want-btn { padding: 12px 30px; font-size: 18px; }
+
+            .scatter-photo {
+                width: 130px !important; /* Уменьшаем фото на телефонах */
+            }
+            .scatter-photo img {
+                height: 130px !important;
+            }
+        }
+
+        /* Остальные стили (кнопки, галерея, торт) оставляем без изменений, они подстроятся */
         .button-group {
             display: flex;
             justify-content: center;
-            gap: 20px;
-            margin-top: 30px;
-            min-height: 50px;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap; /* Кнопки встанут друг под друга, если не влезут в ряд */
         }
 
         .btn {
-            padding: 12px 35px;
+            padding: 12px 30px;
             font-size: 18px;
             border-radius: 50px;
             border: none;
@@ -75,140 +94,89 @@
             transition: transform 0.2s;
         }
 
-        .yes-btn {
-            background-color: var(--main-pink);
-            color: white;
-            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
-        }
-        .yes-btn:hover { transform: scale(1.05); }
-
-        .no-btn {
-            background-color: #d1d9e6;
-            color: #495057;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
+        .yes-btn { background-color: var(--main-pink); color: white; }
+        .no-btn { background-color: #d1d9e6; color: #495057; }
 
         .want-btn {
             background: linear-gradient(45deg, #ff4d6d, #ff758f);
             color: white;
             padding: 15px 40px;
-            font-size: 22px;
+            font-size: 20px;
             border-radius: 50px;
             border: none;
             cursor: pointer;
-            box-shadow: 0 10px 20px rgba(255, 77, 109, 0.4);
             animation: pulse 2s infinite;
         }
 
-        #screen-3 {
-            padding: 0;
-            background-color: #e0e0e0;
-            position: relative;
-            overflow: hidden;
-        }
+        /* --- ГАЛЕРЕЯ --- */
+        #screen-3 { padding: 0; background-color: #e0e0e0; overflow: hidden; }
 
         .scatter-photo {
             background: white;
-            padding: 8px 8px 20px 8px;
-            border-radius: 4px;
+            padding: 5px 5px 15px 5px;
+            border-radius: 3px;
             box-shadow: 2px 4px 10px rgba(0,0,0,0.3);
-            width: 180px;
+            width: 170px;
             position: absolute;
             cursor: grab;
-            user-select: none;
             touch-action: none;
-            transition: transform 0.1s ease, box-shadow 0.1s ease;
         }
-
-        .scatter-photo.dragging {
-            cursor: grabbing;
-            box-shadow: 5px 10px 20px rgba(0,0,0,0.4);
-            transform: scale(1.05) rotate(0deg) !important;
-            z-index: 10000 !important;
-        }
-
-        .scatter-photo img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            border-radius: 2px;
-            pointer-events: none;
-        }
-
-        .gallery-ui {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 20000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .gallery-title-mini {
-            color: #333;
-            background: rgba(255,255,255,0.7);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 18px;
-            margin: 0;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
+        .scatter-photo img { width: 100%; height: 170px; object-fit: cover; pointer-events: none; }
 
         /* ТОРТ */
         .cake-container {
             position: relative;
-            width: 200px;
-            height: 200px;
-            margin: 20px auto;
+            width: 160px;
+            height: 160px;
+            margin: 10px auto;
             cursor: pointer;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-end;
         }
-        .cake-tier {
-            background: #f497ad;
-            border-radius: 10px 10px 4px 4px;
-            border: 2px solid #ff4d6d;
-        }
-        .cake-bottom { width: 150px; height: 60px; }
-        .cake-top { width: 100px; height: 50px; margin-bottom: -2px; }
-        .candle {
-            width: 10px;
-            height: 40px;
-            background: #fff;
-            border: 2px solid #ff4d6d;
-            position: relative;
-            margin-bottom: -2px;
-        }
+        .cake-tier { background: #f497ad; border-radius: 8px 8px 4px 4px; border: 2px solid #ff4d6d; }
+        .cake-bottom { width: 130px; height: 50px; }
+        .cake-top { width: 80px; height: 40px; margin-bottom: -2px; }
+        .candle { width: 8px; height: 30px; background: #fff; border: 2px solid #ff4d6d; margin-bottom: -2px; position: relative; }
         .flame {
-            width: 15px;
-            height: 25px;
-            background: orange;
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            position: absolute;
-            top: -30px;
-            left: -4px;
-            box-shadow: 0 0 15px rgba(255, 165, 0, 0.7);
+            width: 12px; height: 20px; background: orange; border-radius: 50%;
+            position: absolute; top: -25px; left: -3px;
             animation: flicker 0.6s infinite alternate;
         }
-        @keyframes flicker {
-            from { transform: scale(1); opacity: 0.9; }
-            to { transform: scale(1.1); opacity: 1; }
-        }
+        @keyframes flicker { from { transform: scale(1); } to { transform: scale(1.1); } }
         .flame.off { display: none; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        .gallery-ui {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateZ(10000px); /* Принудительно выносим вперед */
+            z-index: 999999; /* Огромный индекс, который не перебьют фото */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            width: 100%; /* Чтобы текст центрировался корректно */
+            pointer-events: none; /* Чтобы контейнер не мешал кликать по фото под ним */
+        }
+
+        .gallery-title-mini, .gallery-ui .want-btn {
+            pointer-events: auto; /* А вот по кнопке кликать можно! */
+        }
+
+        .gallery-title-mini {
+            color: #333;
+            background: rgba(255, 255, 255, 0.9); /* Сделали фон плотнее, чтобы текст читался поверх фото */
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 16px;
+            margin: 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            white-space: nowrap;
+        }
     </style>
 </head>
 <body>
@@ -293,7 +261,16 @@
 
 <div id="screen-5" class="screen">
     <div class="card">
-        <h2 id="cake-instruction">Загадай самое заветное желание... и задуй свечку (жми на неё) ✨</h2>
+        <h2 id="cake-instruction">
+            Загадай самое заветное желание, пиши как ты умеешь, не обязательно красиво, но хорошенько подумай чего бы ты хотела... ✨
+            <br><br>
+            Нажми на свечку, чтобы задуть её... ❤️
+        </h2>
+
+        <!-- Поле ввода, которое искал скрипт -->
+        <textarea id="wish-input" placeholder="Напиши его здесь..."
+                  style="width: 100%; height: 60px; border-radius: 15px; border: 2px solid #fff0f3; padding: 10px; font-family: inherit; margin-bottom: 15px; outline: none; resize: none; border: 2px solid var(--main-pink);"></textarea>
+
         <div class="cake-container" onclick="blowOut()">
             <div class="candle">
                 <div class="flame" id="flame"></div>
@@ -301,8 +278,9 @@
             <div class="cake-tier cake-top"></div>
             <div class="cake-tier cake-bottom"></div>
         </div>
+
         <p id="wish-message" style="display: none; margin-top: 20px; font-weight: bold; color: var(--main-pink); animation: fadeIn 1.5s;">
-            Твоё желание обязательно сбудется! <br> Я для этого сделаю всё возможное. ❤️
+            Твоё желание обязательно сбудется! <br> Я в этом уверен. ❤️
         </p>
     </div>
 </div>
@@ -388,12 +366,22 @@
     function createHeart(x, y) {
         const heart = document.createElement('div');
         heart.innerHTML = '❤️';
-        heart.style.cssText = `position:fixed; left:${x-10}px; top:${y-10}px; font-size:${Math.random()*15+15}px; pointer-events:none; z-index:2000; transition:all 1.5s ease-out;`;
+        heart.style.cssText = `
+        position: fixed;
+        left: ${x - 10}px;
+        top: ${y - 10}px;
+        font-size: ${Math.random() * 15 + 15}px;
+        pointer-events: none;
+        z-index: 2000;
+        transition: all 1.5s ease-out;
+    `;
         document.body.appendChild(heart);
+
         setTimeout(() => {
-            heart.style.transform = `translate(${(Math.random()-0.5)*100}px, -200px)`;
+            heart.style.transform = `translate(${(Math.random() - 0.5) * 100}px, -200px)`;
             heart.style.opacity = '0';
         }, 50);
+
         setTimeout(() => heart.remove(), 1500);
     }
 
@@ -402,28 +390,26 @@
         const ctx = canvas.getContext('2d');
         const container = document.getElementById('final-text-content');
 
-        // Берем точные размеры карточки
-        // offsetWidth и offsetHeight учитывают padding и границы
+        // На телефонах лучше брать scrollWidth/scrollHeight, чтобы перекрыть весь контент карточки
         const w = container.offsetWidth;
         const h = container.offsetHeight;
 
         canvas.width = w;
         canvas.height = h;
 
-        // Заливаем розовым
         ctx.fillStyle = '#ff758f';
         ctx.fillRect(0, 0, w, h);
 
-        // Добавляем текст-подсказку
         ctx.fillStyle = "white";
-        ctx.font = "bold 24px Segoe UI";
+        // Сделаем шрифт подсказки чуть меньше для мобилок
+        const fontSize = window.innerWidth < 480 ? "18px" : "22px";
+        ctx.font = `bold ${fontSize} Segoe UI`;
         ctx.textAlign = "center";
-        ctx.textBaseline = "middle"; // Центрируем по вертикали
+        ctx.textBaseline = "middle";
         ctx.fillText("Стри здесь, чтобы прочитать...", w / 2, h / 2);
 
         let isDrawing = false;
 
-        // Проверка стертости
         const checkScratch = () => {
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
             let cleared = 0;
@@ -431,34 +417,41 @@
                 if (imageData[i] === 0) cleared++;
             }
             if (cleared > (imageData.length / 40) * 0.4) {
-                // Плавно проявляем кнопку
-                const btn = document.getElementById('to-cake-btn');
-                btn.style.display = 'block';
-                canvas.style.pointerEvents = 'none'; // Чтобы можно было выделить текст под слоем
+                document.getElementById('to-cake-btn').style.display = 'block';
+                canvas.style.pointerEvents = 'none';
                 canvas.style.transition = 'opacity 1s';
-                canvas.style.opacity = '0'; // Слой плавно исчезает совсем, когда стерто много
+                canvas.style.opacity = '0';
             }
         };
 
         const scratch = (e) => {
             if (!isDrawing) return;
             const rect = canvas.getBoundingClientRect();
-            const x = (e.type.includes('touch') ? e.touches[0].clientX : e.clientX) - rect.left;
-            const y = (e.type.includes('touch') ? e.touches[0].clientY : e.clientY) - rect.top;
+            // Учет тач-событий для iPhone
+            const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+
+            const x = clientX - rect.left;
+            const y = clientY - rect.top;
 
             ctx.globalCompositeOperation = 'destination-out';
             ctx.beginPath();
-            ctx.arc(x, y, 35, 0, Math.PI * 2);
+            ctx.arc(x, y, 30, 0, Math.PI * 2);
             ctx.fill();
             checkScratch();
         };
 
         canvas.addEventListener('mousedown', () => isDrawing = true);
-        canvas.addEventListener('touchstart', (e) => { isDrawing = true; e.preventDefault(); });
+        canvas.addEventListener('touchstart', (e) => { isDrawing = true; }); // Убрали preventDefault, чтобы не блокировать скролл карточки
         window.addEventListener('mouseup', () => isDrawing = false);
         window.addEventListener('touchend', () => isDrawing = false);
         canvas.addEventListener('mousemove', scratch);
-        canvas.addEventListener('touchmove', scratch);
+        canvas.addEventListener('touchmove', (e) => {
+            if (isDrawing) {
+                scratch(e);
+                e.preventDefault(); // Блокируем скролл только КОГДА стираем
+            }
+        }, { passive: false });
     }
 
     function goToFinal() {
@@ -466,24 +459,82 @@
         setTimeout(initScratchCard, 100);
     }
 
-    function blowOut() {
+    // Функция для задувания свечи
+    async function blowOut() {
+        console.log("--- Начало работы blowOut ---");
+
         const flame = document.getElementById('flame');
-        if (!flame.classList.contains('off')) {
-            flame.classList.add('off');
-            document.getElementById('cake-instruction').innerText = "Желание принято! ✨";
-            document.getElementById('wish-message').style.display = "block";
-            for(let i=0; i<15; i++) {
-                setTimeout(() => {
-                    const rect = document.querySelector('.cake-container').getBoundingClientRect();
-                    createHeart(rect.left + rect.width/2, rect.top);
-                }, i * 100);
-            }
+        const wishInput = document.getElementById('wish-input');
+        const instruction = document.getElementById('cake-instruction');
+        const message = document.getElementById('wish-message');
+
+        // Проверка на наличие элементов (Fail-safe)
+        if (!flame || !wishInput) {
+            console.error("Критическая ошибка: flame или wish-input не найдены в DOM!");
+            alert("Ой, что-то пошло не так с кодом. Проверь консоль!");
+            return;
+        }
+
+        if (flame.classList.contains('off')) {
+            console.log("Свеча уже задута, выходим.");
+            return;
+        }
+
+        const wishText = wishInput.value.trim();
+        console.log("Текст желания:", wishText);
+
+        // 1. Визуальный эффект
+        flame.classList.add('off');
+        wishInput.style.display = 'none';
+        if (instruction) instruction.innerText = "Желание принято! ✨";
+        if (message) message.style.display = "block";
+
+        console.log("Визуальные эффекты применены");
+        createHeartsAtCake();
+
+        // 2. Отправка в Telegram
+        if (wishText) {
+            console.log("Запуск отправки в Telegram...");
+            sendWishToTelegram(wishText);
+        } else {
+            console.log("Желание пустое, отправка отменена.");
         }
     }
 
-    document.getElementById('screen-4').addEventListener('click', (e) => {
-        if (e.target.id !== 'scratch-canvas') createHeart(e.clientX, e.clientY);
-    });
+    function sendWishToTelegram(text) {
+        const token = "8714013678:AAH9wb7ePFWkM6gIndAEOHb7iI7I0cXZPSM";
+        const chatId = "737568733";
+        const fullMessage = `✨ Дашуля загадала желание:\n\n"${text}"`;
+        const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(fullMessage)}`;
+
+        console.log("Отправка запроса на URL:", url);
+
+        fetch(url)
+            .then(response => {
+            console.log("Статус ответа от Telegram:", response.status);
+            if (response.ok) {
+                console.log("Ура! Сообщение доставлено в Telegram.");
+            } else {
+                console.error("Telegram отклонил запрос. Проверь токен и ID чата.");
+            }
+        })
+            .catch(err => {
+            console.error("Ошибка при выполнении fetch:", err);
+        });
+    }
+    function createHeartsAtCake() {
+        console.log("Запуск анимации сердечек...");
+        for (let i = 0; i < 15; i++) {
+            setTimeout(() => {
+                const cake = document.querySelector('.cake-container');
+                if (cake) {
+                    const rect = cake.getBoundingClientRect();
+                    // Используем уже существующую у тебя функцию createHeart
+                    createHeart(rect.left + rect.width / 2, rect.top);
+                }
+            }, i * 100);
+        }
+    }
 </script>
 </body>
 </html>
